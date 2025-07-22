@@ -1,5 +1,7 @@
 import { DATA_ASSET_KEYS, type AnimationTypes } from "../config/config";
+import { NARRATION_ASSET_KEYS } from "../game-keys/narration-keys";
 import { SCENE_KEYS } from "../game-keys/scene-keys";
+import { TITAMON_ASSET_KEYS } from "../game-keys/titamon-keys";
 import { CHARACTER_ASSET_KEYS, WORLD_ASSET_KEYS } from "../game-keys/world-keys";
 import { DataUtils } from "../utils/data-utils";
 
@@ -12,6 +14,12 @@ export class PreloadScene extends Phaser.Scene {
     }
 
     preload(){
+
+        // Load assets for the narration scene
+        this.load.image(NARRATION_ASSET_KEYS.STORY_DIALOG,`game-assets/narration/story-background.png`);
+        this.load.image(TITAMON_ASSET_KEYS.MUNCHKINTRIC,`game-assets/titamon/munchkintric.png`);
+        this.load.image(NARRATION_ASSET_KEYS.SHADOW,`game-assets/narration/shadow.png`);
+        this.load.image(NARRATION_ASSET_KEYS.DOWN_CURSOR,`game-assets/narration/down-cursor.png`);
 
         //Load the background for world background
         this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND,`game-assets/world/level_background.png`);
@@ -37,7 +45,7 @@ export class PreloadScene extends Phaser.Scene {
         this.#createAnimations();  
 
         // when all the assets are loaded , start the world.
-        this.scene.start(SCENE_KEYS.WORLD_SCENE); 
+        this.scene.start(SCENE_KEYS.NARRATION_SCENE); 
     }
 
     #createAnimations(){

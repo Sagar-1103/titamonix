@@ -2,22 +2,23 @@ import { DIRECTION, TILE_LAYER_COLLISION_ALPHA, TILE_LAYER_ENCOUNTER_ALPHA, TILE
 import { SCENE_KEYS } from "../game-keys/scene-keys";
 import { WORLD_ASSET_KEYS } from "../game-keys/world-keys";
 import { Controls } from "../utils/controls";
+import { dataManager, dataManagerStoreKeys } from "../utils/data-manager";
 import { Player } from "../world/characters/player";
-
-const PLAYER_POSITION = {
-    x:6*TILE_SIZE,
-    y:21*TILE_SIZE,
-} as const;
 
 export class WorldScene extends Phaser.Scene {
     #player!:Player;
     #controls!:Controls;
     #encounterLayer!:Phaser.Tilemaps.TilemapLayer | null;
+    #wildMonsterEncountered!:boolean;
 
     constructor(){
         super({
             key:SCENE_KEYS.WORLD_SCENE
         })
+    }
+
+    init(){
+        this.#wildMonsterEncountered = false;
     }
 
     create(){
@@ -67,14 +68,15 @@ export class WorldScene extends Phaser.Scene {
         // add the player character on the canvas
         this.#player = new Player({
             scene:this,
-            position:{
-                x:PLAYER_POSITION.x,
-                y:PLAYER_POSITION.y,
-            },
-            direction:DIRECTION.DOWN,
+            position:dataManager.store.get(dataManagerStoreKeys.PLAYER_POSITION),
+            direction:dataManager.store.get(dataManagerStoreKeys.PLAYER_DIRECTION),
             collisionLayer:collisionLayer,
             spriteGridMovementFinishedCallback:()=>{
                 this.#handlePlayerMovementUpdate();
+                dataManager.store.set({
+                    [dataManagerStoreKeys.PLAYER_POSITION]:{x:this.#player.sprite.x,y:this.#player.sprite.y},
+                    [dataManagerStoreKeys.PLAYER_DIRECTION]:this.#player.direction,
+                })
             }
         });
 
@@ -90,8 +92,14 @@ export class WorldScene extends Phaser.Scene {
     }
 
     update(time:number){
+        // if wild titamon appeared then dont let the player move.
+        if (this.#wildMonsterEncountered) {
+            this.#player.update(time);
+            return;
+        }
+
         // check for user input for player movement
-        const selectedDirection:DIRECTION_TYPES = this.#controls.getDirectionKeyJustPressed();
+        const selectedDirection:DIRECTION_TYPES = this.#controls.getDirectionKeyPressedDown();
         if(selectedDirection!==DIRECTION.NONE){
             this.#player.moveCharacter(selectedDirection);
         }
@@ -101,13 +109,18 @@ export class WorldScene extends Phaser.Scene {
     #handlePlayerMovementUpdate(){
         if (!this.#encounterLayer) return;
 
+        //see if the player is in the the encounter zone
         const isInEncounterZone = this.#encounterLayer.getTileAtWorldXY(this.#player.sprite.x,this.#player.sprite.y,true).index!==-1;
 
         if (!isInEncounterZone) return;
 
-        const showBattle = Math.random()>0.8;
-        if (!showBattle) return;
+        this.#wildMonsterEncountered = Math.random()>0.8;
+        if(!this.#wildMonsterEncountered) return;
 
-        console.log("Titamon Appeared!!!");
+        this.cameras.main.fadeOut(2000,0,0,0);
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,()=>{
+            // start the battle scene
+            this.scene.start(SCENE_KEYS.WORLD_SCENE);
+        })
     }
 }

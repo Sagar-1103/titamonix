@@ -1,0 +1,42 @@
+export const pages = [
+    [
+        "Centuries ago, a massive crystalline meteor had",
+        "crashed into Earth, bringing with it mysterious",
+        "creatures called Titamon.",
+        "",
+        "They were powerful, intelligent beings, unlike",
+        "anything seen before. They could bond with humans",
+        "and wield elemental powers through special",
+        "crystalline cores in their bodies.",
+    ],
+    [
+        "The meteor's impact created the Titan's Scar,",
+        "a massive crater now known as the Core Sanctum,",
+        "where the most powerful Titamon are said to dwell.",
+        "",
+        "The meteor's fragments, called Titan Shards,",
+        "scattered across the land. These shards have",
+        "intense energy and can be used to enhance the",
+        "power of Titamon.",
+    ],
+    [
+        "You are a young resident of Crystalholm Village!",
+        "On your 16th birthday, you receive your first",
+        "Titamon from Professor Axel.",
+        "",
+        "Professor Axel is a renowned researcher studying",
+        "the connection between Titamon and the mysterious",
+        "energy source known as Core Power.",
+        "",
+    ],
+    [
+        "A new world opens before you...",
+        "",
+        "With courage in your heart and the unknown ahead,",
+        "you're about to face mighty beasts, forge eternal",
+        "bonds and uncover secrets lost to time.",
+        "",
+        "Get ready, the world of Titamons awaits!",
+        "",
+    ]
+]

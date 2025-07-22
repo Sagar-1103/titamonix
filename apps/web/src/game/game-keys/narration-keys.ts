@@ -1,0 +1,6 @@
+
+export const NARRATION_ASSET_KEYS = {
+    STORY_DIALOG:"STORY_DIALOG",
+    DOWN_CURSOR:"DOWN_CURSOR",
+    SHADOW:"SHADOW"
+} as const;

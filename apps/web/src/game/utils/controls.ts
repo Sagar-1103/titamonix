@@ -3,12 +3,14 @@ import { DIRECTION, type DIRECTION_TYPES } from "../config/config";
 export class Controls {
     #scene:Phaser.Scene;
     #cursorKeys:Phaser.Types.Input.Keyboard.CursorKeys | undefined;
+    #aKey:Phaser.Input.Keyboard.Key | undefined;
     #lockPlayerInput:boolean
 
     constructor(scene:Phaser.Scene){
         this.#scene = scene;
         this.#lockPlayerInput = false;
         this.#cursorKeys = this.#scene.input.keyboard?.createCursorKeys();
+        this.#aKey = this.#scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.A);
     }
 
     get isInputLocked(){
@@ -19,13 +21,23 @@ export class Controls {
         this.#lockPlayerInput = val;
     }
 
+    wasAKeyPressed(){
+        if (!this.#aKey) return false;
+        return Phaser.Input.Keyboard.JustDown((this.#aKey));
+    }
+
     wasSpaceKeyPressed(){
-        if (!this.#cursorKeys) return;
+        if (!this.#cursorKeys) return false;
         return Phaser.Input.Keyboard.JustDown(this.#cursorKeys?.space);
     }
 
+    wasSpaceKeyPressedLong(){
+        if (!this.#cursorKeys) return false;
+        return this.#cursorKeys.space.isDown;
+    }
+
     wasBackKeyPressed(){
-        if(!this.#cursorKeys) return;
+        if(!this.#cursorKeys) return false;
         return Phaser.Input.Keyboard.JustDown(this.#cursorKeys?.shift);
     }
 
